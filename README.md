@@ -1,2 +1,3 @@
 # API-testing
-API testing for (https://auction-app-1.herokuapp.com/)[Auction App]
+API testing for [Auction App](https://auction-app-1.herokuapp.com)
+
