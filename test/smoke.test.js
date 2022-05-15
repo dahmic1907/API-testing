@@ -1,11 +1,13 @@
-import { assert, expect } from "chai";
+import { assert, expect, use } from "chai";
 import { describe, it } from "mocha";
 import supertest from "supertest";
+import User from "../Classes/user";
 
 const request = supertest('auction-api-1.herokuapp.com/api/v1');
+var user = new User();
+user.generateRendomData()
 
-
-var token = "", id, email, password, amount = 901;
+var token = "", id, email, password, amount = 951;
 var response;
 
 
@@ -15,10 +17,10 @@ describe('Smoke test', function () {
         request
             .post('/auth/register')
             .send({
-                email: "user.user12b@gmail.com",
-                firstName: "New",
-                lastName: "User",
-                password: 'user12345'
+                email: user.email(),
+                firstName: user.firstName(),
+                lastName: user.lastName(),
+                password: user.password()
             })
             .set('Accept', 'application/json')
             .expect(function (res, err) {
@@ -26,9 +28,9 @@ describe('Smoke test', function () {
                     throw err;
                 }
                 response = res.body;
+                
                 id = response.id;
-                email = response.email;
-                password = response.password;
+                
             })
             .expect(200, done);
     });
@@ -36,7 +38,7 @@ describe('Smoke test', function () {
     it('New user logs in', function (done) {
         request
             .post('/auth/login?')
-            .query({ email: email, password: 'user12345' })
+            .query({ email: user.email(), password: user.password() })
             .set('Accept', 'application/json')
             .expect(function (res, err) {
                 if (err) {
@@ -45,9 +47,9 @@ describe('Smoke test', function () {
                 response = res.body;
                 token = response.access_token;
 
-                assert.equal("New", response.credentials.firstName)
-                assert.equal("User", response.credentials.lastName)
-                assert.equal(email, response.credentials.email);
+                assert.equal(user.firstName(), response.credentials.firstName)
+                assert.equal(user.lastName(), response.credentials.lastName)
+                assert.equal(user.email(), response.credentials.email);
 
             })
             .expect(200, done);
