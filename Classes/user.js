@@ -38,7 +38,3 @@ export default class User {
         return (string + '@gmail.com');
     }
 }
-
-/* let user = new User();
-user.generateRendomData();
-console.log(user.email()); */
